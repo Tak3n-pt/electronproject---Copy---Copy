@@ -1,0 +1,16 @@
+{
+  "description": "Windows Icon Configuration for CoreLink Desktop",
+  "icon_sizes": {
+    "ico": {
+      "description": "Windows .ico file should contain multiple sizes",
+      "sizes": ["16x16", "32x32", "48x48", "64x64", "128x128", "256x256"],
+      "file": "icon.ico"
+    },
+    "installer": {
+      "description": "NSIS installer graphics",
+      "sidebar": "164x314 BMP file",
+      "header": "150x57 BMP file"
+    }
+  },
+  "note": "Place your icon.ico file in this build directory. You can convert PNG to ICO using online tools or image editors."
+}

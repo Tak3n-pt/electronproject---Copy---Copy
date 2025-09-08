@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl:*)",
+      "Read(/C:\\Users\\3440\\Desktop\\finalrezlt - Copy (3) - Copy/**)",
+      "Read(/C:\\Users\\3440\\Desktop\\finalrezlt - Copy (3) - Copy\\backend-server/**)",
+      "Read(/C:\\Users\\3440\\Desktop\\finalrezlt - Copy (3) - Copy\\backend-server/**)",
+      "Read(/C:\\Users\\3440\\Desktop\\finalrezlt - Copy (3) - Copy\\backend-server/**)",
+      "Bash(sqlite3:*)",
+      "Bash(del *.jpg)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

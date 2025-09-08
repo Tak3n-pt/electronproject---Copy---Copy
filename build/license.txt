@@ -1,0 +1,36 @@
+CoreLink Desktop - End User License Agreement (EULA)
+
+Copyright (c) 2024 CoreLink Software. All rights reserved.
+
+IMPORTANT: PLEASE READ THIS LICENSE CAREFULLY BEFORE USING THIS SOFTWARE.
+
+1. LICENSE GRANT
+CoreLink Software grants you a revocable, non-exclusive, non-transferable, limited license to download, install and use this software solely for your personal or business purposes in accordance with the terms of this license agreement.
+
+2. RESTRICTIONS
+You agree not to, and you will not permit others to:
+- License, sell, rent, lease, assign, distribute, transmit, host, outsource, disclose or otherwise commercially exploit the software
+- Modify, make derivative works of, disassemble, decrypt, reverse compile or reverse engineer any part of the software
+- Remove, alter or obscure any proprietary notice (including any notice of copyright or trademark)
+
+3. OWNERSHIP
+CoreLink Software retains all rights, title and interest in and to the software, including all copyrights, patents, trade secrets, trademarks, and other intellectual property rights.
+
+4. PRIVACY
+The software stores all data locally on your device and on your designated server. CoreLink Software does not collect, store, or transmit any personal data.
+
+5. WARRANTY DISCLAIMER
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+
+6. LIMITATION OF LIABILITY
+IN NO EVENT SHALL CORELINK SOFTWARE BE LIABLE FOR ANY SPECIAL, INCIDENTAL, INDIRECT, OR CONSEQUENTIAL DAMAGES WHATSOEVER ARISING OUT OF OR IN CONNECTION WITH YOUR USE OF OR INABILITY TO USE THE SOFTWARE.
+
+7. TERMINATION
+This license is effective until terminated. Your rights under this license will terminate automatically without notice if you fail to comply with any of its terms.
+
+8. GOVERNING LAW
+This Agreement shall be governed by the laws of your jurisdiction, without regard to its conflict of law provisions.
+
+By installing or using CoreLink Desktop, you acknowledge that you have read and understood this agreement and agree to be bound by its terms.
+
+For support, please contact: support@corelink.com

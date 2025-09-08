@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Functionality Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #1a1a1a;
+            color: #fff;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #2a2a2a;
+            border-radius: 8px;
+        }
+        .test-section h2 {
+            color: #ffd700;
+            margin-bottom: 20px;
+        }
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .image-card {
+            background: #333;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+        }
+        .image-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .image-card .status {
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+        .success {
+            background: #4CAF50;
+            color: white;
+        }
+        .error {
+            background: #f44336;
+            color: white;
+        }
+        button {
+            background: #ffd700;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 5px;
+        }
+        button:hover {
+            background: #ffed4e;
+        }
+        .log {
+            background: #000;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 20px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="color: #ffd700;">🎮 Revotec Image System Test</h1>
+        
+        <div class="test-section">
+            <h2>Test 1: Direct Image URLs</h2>
+            <p>Testing different types of direct image URLs</p>
+            <div class="image-grid" id="direct-urls-grid">
+                <!-- Will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>Test 2: API Image Search</h2>
+            <input type="text" id="search-query" placeholder="Enter product name (e.g., PS5 Controller)" style="padding: 10px; width: 300px; margin-right: 10px;">
+            <button onclick="searchImages()">Search Images</button>
+            <div class="image-grid" id="search-results-grid">
+                <!-- Will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>Test 3: Local Storage Cache</h2>
+            <button onclick="checkCache()">Check Cached Images</button>
+            <button onclick="clearCache()">Clear Cache</button>
+            <div id="cache-status"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>Console Log</h2>
+            <div class="log" id="console-log"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:4000';
+        const logDiv = document.getElementById('console-log');
+
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const color = type === 'error' ? '#ff6b6b' : type === 'success' ? '#4CAF50' : '#ffd700';
+            logDiv.innerHTML += `<div style="color: ${color}">[${timestamp}] ${message}</div>`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+            console.log(message);
+        }
+
+        // Test 1: Direct URLs
+        const testUrls = [
+            {
+                name: 'HTTPS Image',
+                url: 'https://via.placeholder.com/300x200/FFD700/000000?text=Test+Image'
+            },
+            {
+                name: 'External Gaming Image',
+                url: 'https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=300'
+            },
+            {
+                name: 'Invalid URL (Object)',
+                url: '[object Object]'
+            },
+            {
+                name: 'Null URL',
+                url: null
+            }
+        ];
+
+        function testDirectUrls() {
+            const grid = document.getElementById('direct-urls-grid');
+            grid.innerHTML = '';
+
+            testUrls.forEach((test, index) => {
+                const card = document.createElement('div');
+                card.className = 'image-card';
+                
+                if (test.url && typeof test.url === 'string' && !test.url.includes('[object')) {
+                    card.innerHTML = `
+                        <img src="${test.url}" 
+                             alt="${test.name}"
+                             onload="onImageLoad(this, '${test.name}')"
+                             onerror="onImageError(this, '${test.name}')"
+                        >
+                        <div>${test.name}</div>
+                        <div class="status" id="status-${index}">Loading...</div>
+                    `;
+                } else {
+                    card.innerHTML = `
+                        <div style="height: 150px; display: flex; align-items: center; justify-content: center; background: #222;">
+                            <span>Invalid URL</span>
+                        </div>
+                        <div>${test.name}</div>
+                        <div class="status error">Invalid URL: ${test.url}</div>
+                    `;
+                    log(`❌ Invalid URL for ${test.name}: ${test.url}`, 'error');
+                }
+                
+                grid.appendChild(card);
+            });
+        }
+
+        function onImageLoad(img, name) {
+            const status = img.parentElement.querySelector('.status');
+            if (status) {
+                status.className = 'status success';
+                status.textContent = '✓ Loaded';
+            }
+            log(`✅ Image loaded: ${name}`, 'success');
+        }
+
+        function onImageError(img, name) {
+            const status = img.parentElement.querySelector('.status');
+            if (status) {
+                status.className = 'status error';
+                status.textContent = '✗ Failed';
+            }
+            img.style.display = 'none';
+            img.parentElement.innerHTML = '<div style="height: 150px; display: flex; align-items: center; justify-content: center; background: #222;"><span>⚠️ Load Failed</span></div>' + img.parentElement.innerHTML;
+            log(`❌ Image failed to load: ${name}`, 'error');
+        }
+
+        // Test 2: API Search
+        async function searchImages() {
+            const query = document.getElementById('search-query').value;
+            if (!query) {
+                log('Please enter a search query', 'error');
+                return;
+            }
+
+            const grid = document.getElementById('search-results-grid');
+            grid.innerHTML = '<div style="grid-column: 1/-1;">Searching...</div>';
+            
+            try {
+                log(`Searching for: ${query}`);
+                const response = await fetch(`${API_BASE}/products/search-images`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ productName: query, numResults: 8 })
+                });
+
+                const data = await response.json();
+                
+                if (data.success && data.images) {
+                    log(`Found ${data.images.length} images`, 'success');
+                    displaySearchResults(data.images);
+                    
+                    // Cache the results
+                    const cacheKey = `product-images-test-${Date.now()}`;
+                    localStorage.setItem(cacheKey, JSON.stringify(data.images));
+                    log(`Cached images with key: ${cacheKey}`, 'success');
+                } else {
+                    throw new Error(data.error || 'Search failed');
+                }
+            } catch (error) {
+                log(`Search error: ${error.message}`, 'error');
+                grid.innerHTML = `<div style="grid-column: 1/-1; color: #ff6b6b;">Error: ${error.message}</div>`;
+            }
+        }
+
+        function displaySearchResults(images) {
+            const grid = document.getElementById('search-results-grid');
+            grid.innerHTML = '';
+
+            images.forEach((image, index) => {
+                const card = document.createElement('div');
+                card.className = 'image-card';
+                card.innerHTML = `
+                    <img src="${image.thumbnail || image.url}" 
+                         alt="${image.title || 'Search result'}"
+                         onclick="selectImage('${image.url}')"
+                         style="cursor: pointer;"
+                         onerror="this.src='https://via.placeholder.com/300x200/333/999?text=No+Image'"
+                    >
+                    <div style="font-size: 11px; color: #999;">${image.source || 'Unknown source'}</div>
+                    <button onclick="selectImage('${image.url}')" style="font-size: 12px; padding: 5px 10px;">Select</button>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function selectImage(url) {
+            log(`Selected image: ${url}`, 'success');
+            // Test download endpoint
+            testDownload(url);
+        }
+
+        async function testDownload(imageUrl) {
+            try {
+                log(`Testing download endpoint for: ${imageUrl}`);
+                const response = await fetch(`${API_BASE}/products/download-image`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ imageUrl, productId: 'test-product-123' })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    log(`Download response: ${JSON.stringify(data)}`, 'success');
+                } else {
+                    log(`Download failed: ${response.status} ${response.statusText}`, 'error');
+                }
+            } catch (error) {
+                log(`Download error: ${error.message}`, 'error');
+            }
+        }
+
+        // Test 3: Cache Management
+        function checkCache() {
+            const cacheKeys = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.includes('product-images')) {
+                    cacheKeys.push(key);
+                }
+            }
+            
+            const statusDiv = document.getElementById('cache-status');
+            if (cacheKeys.length > 0) {
+                statusDiv.innerHTML = `<div style="margin-top: 20px;">
+                    <h3>Cached Image Sets: ${cacheKeys.length}</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        ${cacheKeys.map(key => {
+                            const data = JSON.parse(localStorage.getItem(key));
+                            return `<li style="margin: 10px 0; padding: 10px; background: #333; border-radius: 4px;">
+                                <strong>${key}</strong><br>
+                                Images: ${data.length}
+                            </li>`;
+                        }).join('')}
+                    </ul>
+                </div>`;
+                log(`Found ${cacheKeys.length} cached image sets`, 'success');
+            } else {
+                statusDiv.innerHTML = '<p style="margin-top: 20px;">No cached images found</p>';
+                log('No cached images found');
+            }
+        }
+
+        function clearCache() {
+            const keys = [];
+            for (let i = localStorage.length - 1; i >= 0; i--) {
+                const key = localStorage.key(i);
+                if (key && key.includes('product-images')) {
+                    keys.push(key);
+                    localStorage.removeItem(key);
+                }
+            }
+            log(`Cleared ${keys.length} cached image sets`, 'success');
+            checkCache();
+        }
+
+        // Initialize tests
+        window.onload = () => {
+            log('Image test system initialized', 'success');
+            testDirectUrls();
+            checkCache();
+        };
+    </script>
+</body>
+</html>

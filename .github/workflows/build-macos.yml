@@ -1,0 +1,71 @@
+name: Build macOS App
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Create missing icon
+      run: |
+        mkdir -p build
+        # Create a simple 1024x1024 PNG as placeholder
+        python3 -c "
+        from PIL import Image, ImageDraw
+        import os
+        
+        # Create simple icon
+        img = Image.new('RGBA', (1024, 1024), (52, 152, 219, 255))
+        draw = ImageDraw.Draw(img)
+        
+        # Add white circle in center
+        draw.ellipse([256, 256, 768, 768], fill=(255, 255, 255, 255))
+        
+        # Save as PNG
+        img.save('build/icon.png')
+        print('Created build/icon.png')
+        "
+      continue-on-error: true
+    
+    - name: Convert PNG to ICNS (macOS)
+      run: |
+        if [ -f "build/icon.png" ]; then
+          sips -s format icns build/icon.png --out build/icon.icns
+          echo "Created build/icon.icns"
+        else
+          echo "No icon.png found, using default"
+        fi
+      continue-on-error: true
+    
+    - name: Build React app
+      run: npm run build
+    
+    - name: Build macOS DMG
+      run: npm run dist:mac
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Upload DMG artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: CoreLink-macOS-DMG
+        path: dist/*.dmg
+        retention-days: 30
+    
+    - name: List dist contents
+      run: ls -la dist/

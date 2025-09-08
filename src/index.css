@@ -1,3 +1,226 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
+
+/* Import Google Fonts for Arabic */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;900&family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Gaming Theme Custom Styles */
+@layer base {
+  body {
+    @apply bg-gaming-black text-white;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  /* Arabic font styling */
+  body[dir="rtl"] {
+    font-family: 'Cairo', 'Tajawal', 'Segoe UI', Tahoma, sans-serif;
+  }
+
+  /* Better Arabic text rendering */
+  [lang="ar"] {
+    font-family: 'Cairo', 'Tajawal', system-ui, sans-serif;
+    letter-spacing: 0;
+    font-feature-settings: "liga" 1;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-gaming-dark;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gaming-purple rounded;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gaming-yellow;
+  }
+}
+
+@layer utilities {
+  /* macOS window dragging */
+  .draggable {
+    -webkit-app-region: drag;
+  }
+
+  .non-draggable {
+    -webkit-app-region: no-drag;
+  }
+
+  /* Neon glow effects */
+  .neon-yellow {
+    text-shadow: 0 0 10px #FFD700, 0 0 20px #FFD700, 0 0 30px #FFD700;
+  }
+
+  .neon-purple {
+    text-shadow: 0 0 10px #B19CD9, 0 0 20px #B19CD9, 0 0 30px #B19CD9;
+  }
+
+  /* Gaming card hover effect */
+  .gaming-card {
+    @apply bg-gaming-gray border border-gaming-purple/30 rounded-xl p-4 transition-all duration-300;
+  }
+
+  .gaming-card:hover {
+    @apply border-gaming-yellow/50 shadow-lg;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+  }
+
+  /* Button animations */
+  .gaming-btn {
+    @apply relative overflow-hidden;
+  }
+
+  .gaming-btn::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-r from-gaming-yellow/0 via-gaming-yellow/50 to-gaming-yellow/0;
+    transform: translateX(-100%);
+    transition: transform 0.6s;
+  }
+
+  .gaming-btn:hover::before {
+    transform: translateX(100%);
+  }
+
+  /* Pulse animation for active elements */
+  @keyframes gaming-pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  .gaming-pulse {
+    animation: gaming-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  /* Slide animations for notifications */
+  @keyframes slide-in {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slide-out {
+    from {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    to {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+  }
+
+  .animate-slide-in {
+    animation: slide-in 0.3s ease-out;
+  }
+
+  .animate-slide-out {
+    animation: slide-out 0.3s ease-in;
+  }
+
+  /* Gradient text effect */
+  .gradient-text {
+    @apply bg-gradient-to-r from-gaming-yellow to-gaming-purple bg-clip-text text-transparent;
+  }
+
+  /* Glass morphism effect */
+  .glass {
+    background: rgba(26, 26, 26, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(177, 156, 217, 0.3);
+  }
+
+  /* Loading skeleton */
+  @keyframes skeleton-loading {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      #1a1a1a 0%,
+      #2a2a2a 50%,
+      #1a1a1a 100%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s ease-in-out infinite;
+  }
+
+  /* Hover lift effect */
+  .hover-lift {
+    @apply transition-transform duration-200;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-2px);
+  }
+
+  /* Focus ring */
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-gaming-yellow focus:ring-opacity-50;
+  }
+
+  /* RTL Support for Arabic */
+  [dir="rtl"] .rtl\:space-x-reverse > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 1;
+  }
+
+  [dir="rtl"] {
+    direction: rtl;
+    text-align: right;
+  }
+
+  [dir="rtl"] .ltr\:ml-auto {
+    margin-left: 0;
+    margin-right: auto;
+  }
+
+  [dir="rtl"] .ltr\:mr-auto {
+    margin-right: 0;
+    margin-left: auto;
+  }
+
+  /* Flip icons for RTL */
+  [dir="rtl"] .flip-icon {
+    transform: scaleX(-1);
+  }
+
+  /* Arabic-specific font sizes */
+  [lang="ar"] h1,
+  [lang="ar"] .text-4xl,
+  [lang="ar"] .text-3xl {
+    font-weight: 700;
+    line-height: 1.4;
+  }
+
+  [lang="ar"] p,
+  [lang="ar"] .text-base {
+    line-height: 1.8;
+  }
+
+  /* French-specific adjustments */
+  [lang="fr"] {
+    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  }
+}

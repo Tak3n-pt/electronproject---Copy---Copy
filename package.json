@@ -1,7 +1,8 @@
 {
-  "name": "electronproject",
+  "name": "corelink-desktop",
+  "productName": "CoreLink",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "commonjs",
   "main": "src/electron/main.js",
   "scripts": {
@@ -13,13 +14,36 @@
     "preview": "vite preview",
     "dist:mac": "npm run build && electron-builder --mac --arm64",
     "dist:win": "npm run build && electron-builder --win --x64",
-    "dist:linux": "npm run build && electron-builder --linux --x64"
+    "dist:win32": "npm run build && electron-builder --win --ia32",
+    "dist:win-all": "npm run build && electron-builder --win --x64 --ia32",
+    "dist:win-portable": "npm run build && electron-builder --win portable",
+    "dist:linux": "npm run build && electron-builder --linux --x64",
+    "pack:win": "electron-builder --win --dir",
+    "postinstall": "electron-builder install-app-deps",
+    "clean": "rimraf dist dist-react",
+    "clean:build": "npm run clean && npm run build && npm run dist:win"
   },
   "dependencies": {
-    "concurrently": "^8.0.0",
+    "@aws-sdk/client-textract": "^3.830.0",
+    "axios": "^1.10.0",
+    "chart.js": "^4.5.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^5.1.0",
+    "helmet": "^8.1.0",
+    "i18next": "^25.4.2",
+    "i18next-browser-languagedetector": "^8.2.0",
+    "joi": "^17.13.3",
+    "lottie-react": "^2.4.1",
     "lucide-react": "^0.511.0",
+    "morgan": "^1.10.0",
+    "multer": "^2.0.1",
+    "node-cache": "^5.1.2",
     "react": "^19.1.0",
+    "react-chartjs-2": "^5.3.0",
     "react-dom": "^19.1.0",
+    "react-i18next": "^15.7.2",
+    "socket.io": "^4.8.1",
     "sqlite3": "^5.1.7"
   },
   "devDependencies": {
@@ -28,6 +52,7 @@
     "@types/react-dom": "^19.1.2",
     "@vitejs/plugin-react": "^4.4.1",
     "autoprefixer": "^10.4.21",
+    "concurrently": "^9.2.0",
     "electron": "^36.3.1",
     "electron-builder": "^26.0.12",
     "eslint": "^9.25.0",
@@ -37,5 +62,86 @@
     "postcss": "^8.5.3",
     "tailwindcss": "^3.4.17",
     "vite": "^6.3.5"
+  },
+  "build": {
+    "appId": "com.corelink.desktop",
+    "productName": "CoreLink Desktop",
+    "copyright": "Copyright © 2024 CoreLink",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "dist-react/**/*",
+      "src/electron/**/*",
+      "node_modules/**/*",
+      "package.json",
+      "!node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
+      "!node_modules/*/{test,__tests__,tests,powered-test,example,examples}",
+      "!node_modules/*.d.ts",
+      "!node_modules/.bin",
+      "!**/*.{iml,o,hprof,orig,pyc,pyo,rbc,swp,csproj,sln,xproj}",
+      "!.editorconfig",
+      "!**/._*",
+      "!**/{.DS_Store,.git,.hg,.svn,CVS,RCS,SCCS,.gitignore,.gitattributes}",
+      "!**/{__pycache__,thumbs.db,.flowconfig,.idea,.vs,.nyc_output}",
+      "!**/{appveyor.yml,.travis.yml,circle.yml}",
+      "!**/{npm-debug.log,yarn.lock,.yarn-integrity,.yarn-metadata.json}"
+    ],
+    "extraResources": [
+      {
+        "from": "./inventory.db",
+        "to": "inventory.db"
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        },
+        {
+          "target": "portable"
+        }
+      ],
+      "requestedExecutionLevel": "requireAdministrator",
+      "verifyUpdateCodeSignature": false,
+      "legalTrademarks": "CoreLink is a trademark of CoreLink Software",
+      "fileAssociations": [
+        {
+          "ext": "corelink",
+          "name": "CoreLink Data File",
+          "description": "CoreLink Inventory Data"
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "CoreLink Desktop",
+      "artifactName": "CoreLink-Setup-${version}.${ext}",
+      "deleteAppDataOnUninstall": false,
+      "runAfterFinish": true
+    },
+    "portable": {
+      "artifactName": "CoreLink-Portable-${version}.${ext}"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "build/icon.icns",
+      "category": "public.app-category.business"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "build",
+      "category": "Office"
+    }
   }
 }
