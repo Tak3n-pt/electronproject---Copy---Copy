@@ -42,7 +42,7 @@ function createWindow() {
       menu.popup();
     });
   } else {
-    win.loadFile(path.join(__dirname, "../../dist/index.html"));
+    win.loadFile(path.join(__dirname, "../../dist-react/index.html"));
   }
 }
 

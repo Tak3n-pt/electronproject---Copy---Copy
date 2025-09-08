@@ -12,7 +12,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "dist:mac": "npm run build && electron-builder --mac --arm64",
+    "dist:mac": "npm run build && electron-builder --mac",
     "dist:win": "npm run build && electron-builder --win --x64",
     "dist:win32": "npm run build && electron-builder --win --ia32",
     "dist:win-all": "npm run build && electron-builder --win --x64 --ia32",
@@ -134,8 +134,12 @@
       "artifactName": "CoreLink-Portable-${version}.${ext}"
     },
     "mac": {
-      "target": "dmg",
-      "icon": "build/icon.icns",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": ["x64", "arm64"]
+        }
+      ],
       "category": "public.app-category.business"
     },
     "linux": {

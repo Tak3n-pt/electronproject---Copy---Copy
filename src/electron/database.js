@@ -1,8 +1,26 @@
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
+const { app } = require('electron');
 
-// Use the database in the main electron app directory
-const dbPath = path.join(__dirname, '..', '..', 'inventory.db');
+// Use proper cross-platform database path
+const isDev = process.env.NODE_ENV === 'development';
+let dbPath;
+
+if (isDev) {
+  // Development: use project root
+  dbPath = path.join(__dirname, '..', '..', 'inventory.db');
+} else {
+  // Production: use app's user data directory
+  const userDataPath = app.getPath('userData');
+  dbPath = path.join(userDataPath, 'inventory.db');
+  
+  // Copy default database if it doesn't exist
+  const defaultDbPath = path.join(process.resourcesPath, 'inventory.db');
+  const fs = require('fs');
+  if (!fs.existsSync(dbPath) && fs.existsSync(defaultDbPath)) {
+    fs.copyFileSync(defaultDbPath, dbPath);
+  }
+}
 const db = new sqlite3.Database(dbPath, (err) => {
   if (err) {
     console.error('❌ Database connection error:', err);

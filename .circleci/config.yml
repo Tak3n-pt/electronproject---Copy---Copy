@@ -1,0 +1,32 @@
+version: 2.1
+
+orbs:
+  node: circleci/node@5.1.0
+
+jobs:
+  build-macos:
+    macos:
+      xcode: 15.0.0
+    steps:
+      - checkout
+      - node/install:
+          node-version: '18'
+      - run: npm ci
+      - run: 
+          name: Create Icon
+          command: |
+            mkdir -p build
+            # Create simple icon placeholder
+            cat > build/icon.icns << 'EOF'
+            # Placeholder - replace with real icon
+            EOF
+      - run: npm run build
+      - run: npm run dist:mac
+      - store_artifacts:
+          path: dist
+          destination: macos-builds
+
+workflows:
+  build-and-deploy:
+    jobs:
+      - build-macos
